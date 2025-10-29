@@ -1,0 +1,3280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Smart Plate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cae;
+            --accent-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background: rgba(74, 111, 165, 0.3);
+            border-radius: 0 0 5px 5px;
+            animation: rain linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rain {
+            0% {
+                transform: translateY(-100px) rotate(10deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(100vh) rotate(10deg);
+                opacity: 0;
+            }
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .hero-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .assessment-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8c;
+            border-color: #3a5a8c;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nutrient-progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .meal-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meal-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .meal-img {
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .report-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        /* Macronutrients Animation Styles */
+        .macro-animation-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .macro-animation-scene {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .macros-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .macro-card {
+            width: 30%;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .macro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .macro-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-option {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background: #e0e0e0;
+        }
+        
+        .correct {
+            background: #c8e6c9 !important;
+        }
+        
+        .incorrect {
+            background: #ffcdd2 !important;
+        }
+        
+        .macro-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Chatbot styles */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        #chatbot-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        #chatbot-toggle {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        #chatbot-toggle i {
+            font-size: 1.5rem;
+        }
+        
+        .bp-widget {
+            border: none !important;
+            border-radius: 0 0 10px 10px !important;
+        }
+        
+        .nutrient-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .nutrient-info h5 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .nutrient-info ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        
+        /* BMI Table Styles */
+        .bmi-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .bmi-table th, .bmi-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .bmi-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .bmi-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        /* Recipe Cards */
+        .recipe-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 2rem;
+            background: white;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .recipe-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .recipe-body {
+            padding: 1.5rem;
+        }
+        
+        .recipe-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+        
+        .recipe-meta span {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .recipe-meta i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+        
+        .badge-veg {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge-vegan {
+            background-color: #20c997;
+            color: white;
+        }
+        
+        .badge-gluten-free {
+            background-color: #6f42c1;
+            color: white;
+        }
+
+        /* Recipe Modal */
+        .recipe-modal .modal-content {
+            border-radius: 15px;
+        }
+        
+        .recipe-modal .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .recipe-modal .modal-body {
+            padding-top: 0;
+        }
+        
+        .recipe-modal img {
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .recipe-modal .ingredients {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .recipe-modal .instructions {
+            margin-bottom: 15px;
+        }
+        
+        .recipe-modal .nutrition-facts {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        /* Report Download Buttons */
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Share Modal */
+        .share-modal .modal-content {
+            border-radius: 15px;
+        }
+
+        .share-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .share-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .share-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* Nutrient color coding */
+        .nutrient-excellent {
+            background-color: #28a745 !important;
+        }
+
+        .nutrient-good {
+            background-color: #6bbaa7 !important;
+        }
+
+        .nutrient-fair {
+            background-color: #f6c667 !important;
+        }
+
+        .nutrient-poor {
+            background-color: #ff7e5f !important;
+        }
+
+        /* Cost indicator */
+        .cost-within {
+            color: #28a745;
+        }
+
+        .cost-over {
+            color: #dc3545;
+        }
+
+        /* Share link input */
+        .share-link-input {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .share-link-input input {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .share-link-input button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Security Features */
+        .security-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 10px 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-badge i {
+            color: #28a745;
+            font-size: 1.5rem;
+        }
+
+        .security-badge-text {
+            font-size: 0.9rem;
+        }
+
+        .security-modal .modal-body ul {
+            padding-left: 20px;
+        }
+
+        .security-modal .modal-body li {
+            margin-bottom: 10px;
+        }
+
+        .security-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .security-feature i {
+            margin-right: 10px;
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+
+        /* Security Features Section */
+        .security-features-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Voice Accessibility Styles */
+        .voice-accessibility-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .voice-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .voice-toggle-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .voice-toggle-btn:hover {
+            background-color: #3a5a8c;
+        }
+        
+        .voice-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .voice-status.active {
+            color: #28a745;
+        }
+        
+        .voice-status.inactive {
+            color: #6c757d;
+        }
+        
+        .voice-status.error {
+            color: #dc3545;
+        }
+        
+        .voice-commands-list {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .voice-commands-list h6 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .voice-commands-list ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        
+        .voice-commands-list li {
+            margin-bottom: 5px;
+        }
+        
+        .active-field {
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.3) !important;
+            transition: box-shadow 0.3s;
+        }
+        
+        .voice-feedback {
+            background-color: #e9f7fe;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .voice-feedback.active {
+            display: block;
+        }
+        
+        .voice-feedback.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .voice-feedback.success {
+            background-color: #d1edff;
+            color: #155724;
+        }
+        
+        .voice-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .voice-indicator.listening {
+            background-color: #28a745;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .voice-indicator.speaking {
+            background-color: #007bff;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="raindrops-container"></div>
+
+    <!-- Security Badge -->
+    <div class="security-badge" data-bs-toggle="modal" data-bs-target="#securityModal">
+        <i class="fas fa-shield-alt"></i>
+        <div class="security-badge-text">
+            <strong>6-Layer Security</strong><br>
+            Your data is protected
+        </div>
+    </div>
+
+    <!-- Security Modal -->
+    <div class="modal fade security-modal" id="securityModal" tabindex="-1" aria-labelledby="securityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="securityModalLabel">Our 6-Layer Security System</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="security-features-section">
+                        <h4 class="mb-4"><i class="fas fa-shield-alt me-2"></i>Comprehensive Data Protection</h4>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <h5>1. End-to-End Encryption</h5>
+                                <p>All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Your personal information remains confidential and secure.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-user-shield"></i>
+                            <div>
+                                <h5>2. Multi-Factor Authentication</h5>
+                                <p>Optional biometric or OTP verification adds an extra layer of security beyond passwords.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-mask"></i>
+                            <div>
+                                <h5>3. Data Anonymization</h5>
+                                <p>Personal identifiers are removed from analytics data to protect your privacy while still allowing for personalized recommendations.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-fingerprint"></i>
+                            <div>
+                                <h5>4. Strict Access Controls</h5>
+                                <p>Role-based access ensures only authorized personnel can view sensitive data, with all access logged and monitored.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h5>5. Automatic Session Timeout</h5>
+                                <p>After 30 minutes of inactivity, your session automatically expires to prevent unauthorized access.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="security-feature">
+                            <i class="fas fa-database"></i>
+                            <div>
+                                <h5>6. Regular Security Audits</h5>
+                                <p>Our systems undergo frequent penetration testing and vulnerability assessments by independent security experts.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="encryption-notice">
+                        <h5><i class="fas fa-info-circle me-2"></i>How We Protect Your Data</h5>
+                        <p>All sensitive information (including health metrics and personal details) is encrypted before storage. Our security protocols are SOC 2 Type II compliant and regularly updated to address emerging threats.</p>
+                    </div>
+                    
+                    <div class="activity-log">
+                        <h5><i class="fas fa-history me-2"></i>Recent Security Activity</h5>
+                        <div class="activity-item">
+                            <div><strong>System Update</strong> - Security patches applied</div>
+                            <div class="activity-time">Just now</div>
+                        </div>
+                        <div class="activity-item">
+                            <div><strong>Data Backup</strong> - Encrypted backup completed</div>
+                            <div class="activity-time">Today, 03:00 AM</div>
+                        </div>
+                        <div class="activity-item">
+                            <div><strong>Security Scan</strong> - No vulnerabilities detected</div>
+                            <div class="activity-time">Yesterday, 11:30 PM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-utensils me-2"></i>Smart Plate AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recipes">Recipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#assessment">Assessment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#report">Report</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container hero-section">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">AI-Powered Smart Plate</h1>
+                <p class="lead mb-4">Budget-friendly meal planning and portion estimation powered by artificial intelligence to help you eat healthier while saving money.</p>
+                <div class="d-flex gap-3">
+                    <a href="#assessment" class="btn btn-primary btn-lg px-4">Get Started</a>
+                    <a href="#recipes" class="btn btn-outline-secondary btn-lg px-4">Explore Recipes</a>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted"><i class="fas fa-lock me-1"></i>All data is encrypted and securely stored</small>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Healthy food" class="img-fluid rounded">
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice Accessibility Section -->
+    <section class="container">
+        <div class="voice-accessibility-container">
+            <h3><i class="fas fa-microphone-alt me-2"></i>Voice-Accessible Form</h3>
+            <p class="text-muted">Enable voice interaction for easier form completion, especially for users with visual or physical challenges.</p>
+            
+            <div class="voice-controls">
+                <button id="voiceToggle" class="voice-toggle-btn">
+                    <i class="fas fa-microphone"></i>
+                    <span id="voiceToggleText">Enable Voice Interaction</span>
+                </button>
+                
+                <div id="voiceStatus" class="voice-status inactive">
+                    <span class="voice-indicator"></span>
+                    <span id="voiceStatusText">Voice interaction disabled</span>
+                </div>
+            </div>
+            
+            <div class="voice-commands-list">
+                <h6>Available Voice Commands:</h6>
+                <ul>
+                    <li><strong>"Next"</strong> - Move to the next field</li>
+                    <li><strong>"Previous"</strong> - Move to the previous field</li>
+                    <li><strong>"Repeat"</strong> - Repeat the current question</li>
+                    <li><strong>"Help"</strong> - List available commands</li>
+                    <li><strong>"Submit"</strong> - Submit the form</li>
+                </ul>
+            </div>
+            
+            <div id="voiceFeedback" class="voice-feedback">
+                <i class="fas fa-info-circle me-2"></i>
+                <span id="voiceFeedbackText"></span>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="container my-5 py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Smart Features</h2>
+            <p class="lead text-muted">Our AI-powered platform helps you make better food choices</p>
+        </div>
+        
+        <!-- Security Features Section -->
+        <div class="security-features-section">
+            <div class="text-center mb-4">
+                <h3><i class="fas fa-shield-alt me-2"></i>Advanced Security Features</h3>
+                <p class="text-muted">Your data privacy and security are our top priority</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h4>Data Encryption</h4>
+                        <p>All sensitive data is encrypted using AES-256 both in transit and at rest, ensuring your information remains private.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h4>Biometric Auth</h4>
+                        <p>Optional fingerprint or facial recognition adds an extra layer of security to protect your account.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mask"></i>
+                        </div>
+                        <h4>Data Anonymization</h4>
+                        <p>Personal identifiers are removed from analytics data while still allowing for personalized recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Macronutrients Animation Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h4 class="text-center mb-4"><i class="fas fa-utensils me-2"></i>Understanding Macronutrients</h4>
+                <div class="macro-animation-container">
+                    <!-- INTRO SCENE -->
+                    <div class="macro-animation-scene" id="macro-intro" style="animation: fadeInUp 1s forwards 0.5s;">
+                        <h2 class="text-center">How Macronutrients Fuel Your Body</h2>
+                        <p class="text-center">Carbs, proteins, and fats aren't just calories—they're your body's building blocks!</p>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <span style="font-size: 4rem;">🍞 🍗 🥑</span>
+                        </div>
+                        <p class="text-center">Every bite you take provides energy, repairs tissues, and keeps your brain sharp. Let's break it down!</p>
+                    </div>
+                    
+                    <!-- CARBS SCENE -->
+                    <div class="macro-animation-scene" id="macro-carbs" style="animation: fadeInUp 1s forwards 3s;">
+                        <h3>Carbohydrates: Your Energy Source</h3>
+                        <div class="macros-container">
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 3.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🍞</div>
+                                <h4>Whole Grains</h4>
+                                <p>Slow-release energy + fiber</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 4s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🍎</div>
+                                <h4>Fruits</h4>
+                                <p>Natural sugars + vitamins</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 4.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🔄</div>
+                                <h4>Glucose</h4>
+                                <p>Fuel for brain & muscles</p>
+                            </div>
+                        </div>
+                        <p class="text-center"><strong>Key Fact:</strong> 1 gram of carbs = 4 calories. Choose fiber-rich options for steady energy!</p>
+                    </div>
+                    
+                    <!-- PROTEIN SCENE -->
+                    <div class="macro-animation-scene" id="macro-protein" style="animation: fadeInUp 1s forwards 6s;">
+                        <h3>Proteins: The Repair Crew</h3>
+                        <div class="macros-container">
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 6.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🍳</div>
+                                <h4>Eggs</h4>
+                                <p>Complete amino acids</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 7s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🥩</div>
+                                <h4>Meat/Fish</h4>
+                                <p>Muscle building</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 7.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🧬</div>
+                                <h4>DNA Repair</h4>
+                                <p>Tissue maintenance</p>
+                            </div>
+                        </div>
+                        <p class="text-center"><strong>Key Fact:</strong> You need ~0.8g protein per kg of body weight daily!</p>
+                    </div>
+                    
+                    <!-- FATS SCENE -->
+                    <div class="macro-animation-scene" id="macro-fats" style="animation: fadeInUp 1s forwards 9s;">
+                        <h3>Fats: Brain & Hormone Support</h3>
+                        <div class="macros-container">
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 9.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🥑</div>
+                                <h4>Avocados</h4>
+                                <p>Healthy monounsaturated fats</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 10s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">🧠</div>
+                                <h4>Brain Health</h4>
+                                <p>60% of your brain is fat!</p>
+                            </div>
+                            <div class="macro-card" style="animation: fadeIn 0.5s forwards 10.5s;" onclick="animateMacroCard(this)">
+                                <div class="macro-icon">💊</div>
+                                <h4>Vitamin Absorption</h4>
+                                <p>For vitamins A, D, E, K</p>
+                            </div>
+                        </div>
+                        <p class="text-center"><strong>Key Fact:</strong> 1 gram of fat = 9 calories (most energy-dense macro).</p>
+                    </div>
+                    
+                    <!-- BALANCE SCENE -->
+                    <div class="macro-animation-scene" id="macro-balance" style="animation: fadeInUp 1s forwards 12s;">
+                        <h3>The Perfect Balance</h3>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <div style="display: inline-block; width: 300px; height: 300px; border-radius: 50%; background: conic-gradient(
+                                #4caf50 0% 50%, 
+                                #ff9800 50% 75%, 
+                                #f44336 75% 100%
+                            ); position: relative;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: white; border-radius: 50%;"></div>
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <p><span style="color: #4caf50;">50% Carbs</span> | <span style="color: #ff9800;">25% Protein</span> | <span style="color: #f44336;">25% Fats</span></p>
+                            </div>
+                        </div>
+                        <p class="text-center">Too much of one macro can lead to energy crashes, muscle loss, or hormonal imbalances. Aim for variety!</p>
+                    </div>
+                    
+                    <!-- QUIZ SCENE -->
+                    <div class="macro-animation-scene" id="macro-quiz" style="animation: fadeInUp 1s forwards 14s;">
+                        <h3>Test Your Knowledge</h3>
+                        <p>Which macronutrient is most energy-dense?</p>
+                        <div class="quiz-option" onclick="checkMacroAnswer(this, false)">Carbohydrates (4 cal/g)</div>
+                        <div class="quiz-option" onclick="checkMacroAnswer(this, false)">Protein (4 cal/g)</div>
+                        <div class="quiz-option" onclick="checkMacroAnswer(this, true)">Fats (9 cal/g)</div>
+                        <div id="macro-feedback" class="macro-feedback">
+                            <strong>Correct!</strong> Fats provide 9 calories per gram—the most concentrated energy source.
+                        </div>
+                    </div>
+                    
+                    <!-- CLOSING SCENE -->
+                    <div class="macro-animation-scene" id="macro-closing" style="animation: fadeInUp 1s forwards 16s; text-align: center;">
+                        <h3>Fuel Your Body Wisely!</h3>
+                        <p style="font-size: 1.2rem;">Next time you eat, ask: <em>"Am I giving my body what it needs?"</em></p>
+                        <div style="margin: 30px 0; font-size: 2rem;">🥗 🏃‍♀️ 💡</div>
+                        <button style="padding: 10px 20px; background: #2e7d32; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">Learn More About Nutrition</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h4>Portion Estimation</h4>
+                    <p>AI models accurately estimate portion sizes using regression algorithms to help you control your intake.</p>
+                    <p class="text-muted"><small>Models: LinearRegression, XGBoostRegressor</small></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <h4>Meal Recommendation</h4>
+                    <p>Personalized meal plans based on your budget, nutritional needs, and food preferences.</p>
+                    <p class="text-muted"><small>Models: RandomForest, CatBoost, Neural Networks</small></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Grocery Forecasting</h4>
+                    <p>Predict grocery costs and optimize your shopping list with time series forecasting.</p>
+                    <p class="text-muted"><small>Models: ARIMA, Prophet, LSTM</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4>Deficiency Detection</h4>
+                    <p>Identify potential nutritional deficiencies based on your eating habits and health data.</p>
+                    <p class="text-muted"><small>Models: LogisticRegression, GradientBoosting</small></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-optimize"></i>
+                    </div>
+                    <h4>Menu Optimization</h4>
+                    <p>Get the most nutritional value for your money with our optimization algorithms.</p>
+                    <p class="text-muted"><small>Models: RLlib, Genetic Algorithms</small></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h4>Detailed Reports</h4>
+                    <p>Download comprehensive reports with nutritional analysis and personalized recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipe Section with Complete Recipes -->
+    <section id="recipes" class="container my-5 py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Healthy Recipes</h2>
+            <p class="lead text-muted">Nutritious meals tailored to your goals</p>
+        </div>
+        
+        <div class="row">
+            <!-- Recipe 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Avocado Toast" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Avocado Toast with Eggs</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 320 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 15g protein</span>
+                            <span><i class="fas fa-seedling"></i> 30g carbs</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge badge-veg me-1">Vegetarian</span>
+                            <span class="badge badge-gluten-free">Gluten-Free</span>
+                        </div>
+                        <p class="mb-3">Whole-grain toast topped with smashed avocado, poached eggs, and chili flakes.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal1">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Buddha Bowl" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Quinoa Buddha Bowl</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 450 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 18g protein</span>
+                            <span><i class="fas fa-seedling"></i> 55g carbs</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge badge-veg me-1">Vegetarian</span>
+                            <span class="badge badge-vegan me-1">Vegan</span>
+                            <span class="badge badge-gluten-free">Gluten-Free</span>
+                        </div>
+                        <p class="mb-3">Quinoa, roasted veggies, chickpeas, and tahini dressing.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal2">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Lentil Soup" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Spicy Lentil Soup</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 280 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 20g protein</span>
+                            <span><i class="fas fa-seedling"></i> 40g carbs</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge badge-veg me-1">Vegetarian</span>
+                            <span class="badge badge-vegan">Vegan</span>
+                        </div>
+                        <p class="mb-3">Protein-packed lentils with tomatoes, spinach, and warming spices.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal3">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe 4 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Salmon Salad" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Grilled Salmon Salad</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 380 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 30g protein</span>
+                            <span><i class="fas fa-seedling"></i> 15g carbs</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge badge-gluten-free">Gluten-Free</span>
+                        </div>
+                        <p class="mb-3">Omega-3 rich salmon with mixed greens, avocado, and lemon dressing.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal4">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe 5 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Chicken Wrap" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Greek Chicken Wrap</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 400 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 35g protein</span>
+                            <span><i class="fas fa-seedling"></i> 30g carbs</span>
+                        </div>
+                        <p class="mb-3">Whole-wheat wrap with grilled chicken, tzatziki, and fresh veggies.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal5">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe 6 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="recipe-card">
+                    <img src="https://images.unsplash.com/photo-1608500218930-a0c0c66fc5d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Smoothie Bowl" class="recipe-img">
+                    <div class="recipe-body">
+                        <h5 class="recipe-title">Berry Smoothie Bowl</h5>
+                        <div class="recipe-meta">
+                            <span><i class="fas fa-fire"></i> 250 kcal</span>
+                            <span><i class="fas fa-dumbbell"></i> 8g protein</span>
+                            <span><i class="fas fa-seedling"></i> 45g carbs</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge badge-veg me-1">Vegetarian</span>
+                            <span class="badge badge-vegan">Vegan</span>
+                        </div>
+                        <p class="mb-3">Blended berries with banana, almond milk, and granola topping.</p>
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#recipeModal6">View Recipe</button>
+                        <button class="btn btn-sm btn-primary ms-2">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipe Modals -->
+    <!-- Recipe Modal 1 -->
+    <div class="modal fade recipe-modal" id="recipeModal1" tabindex="-1" aria-labelledby="recipeModal1Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal1Label">Avocado Toast with Eggs</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Avocado Toast">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 2)</h6>
+                        <ul>
+                            <li>2 slices whole-grain bread</li>
+                            <li>1 ripe avocado</li>
+                            <li>2 eggs</li>
+                            <li>1 tbsp lemon juice</li>
+                            <li>Salt and pepper to taste</li>
+                            <li>Red pepper flakes (optional)</li>
+                            <li>1 tbsp olive oil</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>Toast the bread until golden and crisp.</li>
+                            <li>Cut the avocado in half, remove the pit, and scoop the flesh into a bowl.</li>
+                            <li>Add lemon juice, salt, and pepper to the avocado and mash with a fork.</li>
+                            <li>Heat olive oil in a non-stick pan over medium heat.</li>
+                            <li>Crack the eggs into the pan and cook to your preference (about 3 minutes for sunny side up).</li>
+                            <li>Spread the mashed avocado on the toast and top with the cooked eggs.</li>
+                            <li>Sprinkle with red pepper flakes if desired and serve immediately.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 320 kcal | <strong>Protein:</strong> 15g | <strong>Carbs:</strong> 30g | <strong>Fats:</strong> 18g</p>
+                        <p><strong>Fiber:</strong> 10g | <strong>Vitamin C:</strong> 20% DV | <strong>Iron:</strong> 15% DV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal 2 -->
+    <div class="modal fade recipe-modal" id="recipeModal2" tabindex="-1" aria-labelledby="recipeModal2Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal2Label">Quinoa Buddha Bowl</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Quinoa Buddha Bowl">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 2)</h6>
+                        <ul>
+                            <li>1 cup cooked quinoa</li>
+                            <li>1 cup chickpeas, drained and rinsed</li>
+                            <li>1 cup mixed vegetables (bell peppers, zucchini, carrots)</li>
+                            <li>1 tbsp olive oil</li>
+                            <li>1/2 avocado, sliced</li>
+                            <li>2 tbsp tahini</li>
+                            <li>1 tbsp lemon juice</li>
+                            <li>1 tsp maple syrup</li>
+                            <li>Salt and pepper to taste</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>Preheat oven to 400°F (200°C).</li>
+                            <li>Toss the chickpeas and mixed vegetables with olive oil, salt, and pepper.</li>
+                            <li>Spread on a baking sheet and roast for 20-25 minutes until tender.</li>
+                            <li>In a small bowl, whisk together tahini, lemon juice, maple syrup, and 2 tbsp water to make the dressing.</li>
+                            <li>Divide the cooked quinoa between two bowls.</li>
+                            <li>Top with roasted vegetables, chickpeas, and avocado slices.</li>
+                            <li>Drizzle with tahini dressing and serve.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 450 kcal | <strong>Protein:</strong> 18g | <strong>Carbs:</strong> 55g | <strong>Fats:</strong> 20g</p>
+                        <p><strong>Fiber:</strong> 15g | <strong>Iron:</strong> 25% DV | <strong>Vitamin C:</strong> 90% DV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal 3 -->
+    <div class="modal fade recipe-modal" id="recipeModal3" tabindex="-1" aria-labelledby="recipeModal3Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal3Label">Spicy Lentil Soup</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Spicy Lentil Soup">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 4)</h6>
+                        <ul>
+                            <li>1 cup dried lentils, rinsed</li>
+                            <li>1 onion, diced</li>
+                            <li>2 cloves garlic, minced</li>
+                            <li>2 carrots, diced</li>
+                            <li>2 celery stalks, diced</li>
+                            <li>1 can diced tomatoes</li>
+                            <li>4 cups vegetable broth</li>
+                            <li>1 tsp cumin</li>
+                            <li>1 tsp paprika</li>
+                            <li>1/2 tsp chili flakes</li>
+                            <li>2 cups fresh spinach</li>
+                            <li>2 tbsp olive oil</li>
+                            <li>Salt and pepper to taste</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>Heat olive oil in a large pot over medium heat.</li>
+                            <li>Add onion, garlic, carrots, and celery. Cook for 5 minutes until softened.</li>
+                            <li>Add cumin, paprika, and chili flakes. Stir for 1 minute until fragrant.</li>
+                            <li>Add lentils, diced tomatoes, and vegetable broth. Bring to a boil.</li>
+                            <li>Reduce heat and simmer for 25-30 minutes until lentils are tender.</li>
+                            <li>Stir in spinach and cook for 2 minutes until wilted.</li>
+                            <li>Season with salt and pepper to taste.</li>
+                            <li>Serve hot with crusty bread if desired.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 280 kcal | <strong>Protein:</strong> 20g | <strong>Carbs:</strong> 40g | <strong>Fats:</strong> 5g</p>
+                        <p><strong>Fiber:</strong> 18g | <strong>Iron:</strong> 35% DV | <strong>Vitamin A:</strong> 120% DV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal 4 -->
+    <div class="modal fade recipe-modal" id="recipeModal4" tabindex="-1" aria-labelledby="recipeModal4Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal4Label">Grilled Salmon Salad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Grilled Salmon Salad">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 2)</h6>
+                        <ul>
+                            <li>2 salmon fillets (about 6 oz each)</li>
+                            <li>4 cups mixed greens</li>
+                            <li>1/2 avocado, sliced</li>
+                            <li>1/2 cup cherry tomatoes, halved</li>
+                            <li>1/4 red onion, thinly sliced</li>
+                            <li>2 tbsp olive oil</li>
+                            <li>1 tbsp lemon juice</li>
+                            <li>1 tsp honey</li>
+                            <li>1 tsp Dijon mustard</li>
+                            <li>Salt and pepper to taste</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>Preheat grill or grill pan to medium-high heat.</li>
+                            <li>Brush salmon fillets with 1 tbsp olive oil and season with salt and pepper.</li>
+                            <li>Grill salmon for 4-5 minutes per side until cooked through.</li>
+                            <li>In a large bowl, combine mixed greens, avocado, cherry tomatoes, and red onion.</li>
+                            <li>In a small bowl, whisk together remaining olive oil, lemon juice, honey, and Dijon mustard to make the dressing.</li>
+                            <li>Drizzle dressing over the salad and toss gently.</li>
+                            <li>Divide salad between two plates and top with grilled salmon.</li>
+                            <li>Serve immediately.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 380 kcal | <strong>Protein:</strong> 30g | <strong>Carbs:</strong> 15g | <strong>Fats:</strong> 25g</p>
+                        <p><strong>Omega-3:</strong> 2.5g | <strong>Vitamin D:</strong> 80% DV | <strong>Vitamin C:</strong> 60% DV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal 5 -->
+    <div class="modal fade recipe-modal" id="recipeModal5" tabindex="-1" aria-labelledby="recipeModal5Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal5Label">Greek Chicken Wrap</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Greek Chicken Wrap">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 2)</h6>
+                        <ul>
+                            <li>2 whole wheat tortillas</li>
+                            <li>1 chicken breast, cooked and sliced</li>
+                            <li>1/2 cup Greek yogurt</li>
+                            <li>1/2 cucumber, grated</li>
+                            <li>1 clove garlic, minced</li>
+                            <li>1 tbsp lemon juice</li>
+                            <li>1/2 cup cherry tomatoes, halved</li>
+                            <li>1/4 red onion, thinly sliced</li>
+                            <li>1/2 cup lettuce, shredded</li>
+                            <li>1/4 cup feta cheese, crumbled</li>
+                            <li>1 tbsp olive oil</li>
+                            <li>Salt and pepper to taste</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>In a small bowl, mix Greek yogurt, grated cucumber, garlic, lemon juice, salt, and pepper to make tzatziki sauce.</li>
+                            <li>Heat tortillas according to package instructions.</li>
+                            <li>Spread 2 tbsp of tzatziki sauce on each tortilla.</li>
+                            <li>Divide chicken slices between the two tortillas.</li>
+                            <li>Top with tomatoes, red onion, lettuce, and feta cheese.</li>
+                            <li>Drizzle with olive oil and season with salt and pepper if desired.</li>
+                            <li>Roll up the tortillas tightly, tucking in the sides as you go.</li>
+                            <li>Cut in half and serve immediately.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 400 kcal | <strong>Protein:</strong> 35g | <strong>Carbs:</strong> 30g | <strong>Fats:</strong> 18g</p>
+                        <p><strong>Calcium:</strong> 25% DV | <strong>Iron:</strong> 20% DV | <strong>Vitamin B12:</strong> 45% DV</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal 6 -->
+    <div class="modal fade recipe-modal" id="recipeModal6" tabindex="-1" aria-labelledby="recipeModal6Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModal6Label">Berry Smoothie Bowl</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://images.unsplash.com/photo-1608500218930-a0c0c66fc5d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded" alt="Berry Smoothie Bowl">
+                    
+                    <div class="ingredients">
+                        <h6><i class="fas fa-list-ul me-2"></i>Ingredients (Serves 1)</h6>
+                        <ul>
+                            <li>1 frozen banana</li>
+                            <li>1 cup mixed berries (strawberries, blueberries, raspberries)</li>
+                            <li>1/2 cup almond milk</li>
+                            <li>1 tbsp chia seeds</li>
+                            <li>1/4 cup granola</li>
+                            <li>1 tbsp almond butter</li>
+                            <li>1 tsp honey (optional)</li>
+                            <li>Fresh berries for topping</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h6><i class="fas fa-list-ol me-2"></i>Instructions</h6>
+                        <ol>
+                            <li>In a blender, combine frozen banana, mixed berries, and almond milk.</li>
+                            <li>Blend until smooth and creamy, adding more almond milk if needed.</li>
+                            <li>Pour the smoothie into a bowl.</li>
+                            <li>Top with granola, chia seeds, almond butter, and fresh berries.</li>
+                            <li>Drizzle with honey if desired.</li>
+                            <li>Serve immediately with a spoon.</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="nutrition-facts">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Nutrition Facts (per serving)</h6>
+                        <p><strong>Calories:</strong> 250 kcal | <strong>Protein:</strong> 8g | <strong>Carbs:</strong> 45g | <strong>Fats:</strong> 10g</p>
+                        <p><strong>Fiber:</strong> 12g | <strong>Vitamin C:</strong> 120% DV | <strong>Antioxidants:</strong> High</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add to Meal Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="assessment" class="container my-5 py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="assessment-form">
+                    <h2 class="fw-bold text-center mb-4">Personalized Nutrition Assessment</h2>
+                    <form id="nutritionForm">
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" required>
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label for="height" class="form-label">Height (cm)</label>
+                                <input type="number" class="form-control" id="height" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="weight" class="form-label">Weight (kg)</label>
+                                <input type="number" class="form-control" id="weight" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="activity" class="form-label">Activity Level</label>
+                            <select class="form-select" id="activity" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="sedentary">Sedentary (little or no exercise)</option>
+                                <option value="light">Lightly active (light exercise 1-3 days/week)</option>
+                                <option value="moderate">Moderately active (moderate exercise 3-5 days/week)</option>
+                                <option value="active">Very active (hard exercise 6-7 days/week)</option>
+                                <option value="extreme">Extremely active (very hard exercise & physical job)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="goal" class="form-label">Primary Goal</label>
+                            <select class="form-select" id="goal" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="weight_loss">Weight Loss</option>
+                                <option value="weight_gain">Weight Gain</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="muscle_gain">Muscle Gain</option>
+                                <option value="health_improvement">General Health Improvement</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="budget" class="form-label">Weekly Food Budget ($)</label>
+                            <input type="range" class="form-range" id="budget" min="20" max="200" step="5" value="100">
+                            <div class="d-flex justify-content-between">
+                                <span>$20</span>
+                                <span id="budgetValue">$100</span>
+                                <span>$200</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Dietary Preferences</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="vegetarian">
+                                <label class="form-check-label" for="vegetarian">Vegetarian</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="vegan">
+                                <label class="form-check-label" for="vegan">Vegan</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="glutenFree">
+                                <label class="form-check-label" for="glutenFree">Gluten Free</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dairyFree">
+                                <label class="form-check-label" for="dairyFree">Dairy Free</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="allergies" class="form-label">Allergies or Intolerances (comma separated)</label>
+                            <input type="text" class="form-control" id="allergies" placeholder="e.g. peanuts, shellfish">
+                        </div>
+                        
+                        <div class="nutrient-info">
+                            <h5><i class="fas fa-info-circle me-2"></i>Key Nutrients We Track</h5>
+                            <p>Our system focuses on these essential nutrients for optimal health based on comprehensive nutritional analysis:</p>
+                            <ul>
+                                <li><strong>Macronutrients:</strong> Protein, Carbohydrates, Fats (including saturated, monounsaturated, polyunsaturated)</li>
+                                <li><strong>Vitamins:</strong> A, C, D, B12, K (selected to avoid redundancy while covering key functions)</li>
+                                <li><strong>Minerals:</strong> Calcium, Iron, Magnesium, Potassium, Zinc (critical for various bodily functions)</li>
+                                <li><strong>Fiber:</strong> For digestive health and metabolism</li>
+                                <li><strong>Nutrition Density:</strong> Overall nutrient quality score</li>
+                            </ul>
+                            <p class="mb-0">These nutrients were selected based on their importance for overall health, unique contributions to bodily functions, and to avoid multicollinearity issues identified in our nutritional analysis.</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Generate Plan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard" class="container my-5 py-5" style="display: none;">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Your Personalized Nutrition Dashboard</h2>
+            <p class="lead text-muted">AI-generated recommendations based on your assessment</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-user-circle me-2"></i>Profile Summary</h4>
+                    <div id="profileSummary">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-bullseye me-2"></i>Nutrition Goals</h4>
+                    <div id="nutritionGoals">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-chart-pie me-2"></i>Macronutrient Distribution</h4>
+                    <canvas id="macroChart" height="200"></canvas>
+                </div>
+
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-vitamin me-2"></i>Key Micronutrients</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Vitamin D: <span id="vitaminDValue">15</span>mcg (75% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Iron: <span id="ironValue">12</span>mg (85% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-good" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Calcium: <span id="calciumValue">1000</span>mg (75% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vitamin C: <span id="vitaminCValue">90</span>mg (100% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Potassium: <span id="potassiumValue">3500</span>mg (75% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Magnesium: <span id="magnesiumValue">400</span>mg (95% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Zinc: <span id="zincValue">11</span>mg (100% RDA)</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-utensils me-2"></i>Weekly Meal Plan</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Breakfast</th>
+                                    <th>Lunch</th>
+                                    <th>Dinner</th>
+                                    <th>Snacks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mealPlanTable">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-shopping-cart me-2"></i>Grocery List</h4>
+                    <div class="row" id="groceryList">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <h4><i class="fas fa-chart-bar me-2"></i>Nutritional Analysis</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Calories: <span id="caloriesValue">2000</span>/day</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Protein: <span id="proteinValue">120</span>g/day</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Carbs: <span id="carbsValue">250</span>g/day</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fats: <span id="fatsValue">65</span>g/day</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fiber: <span id="fiberValue">25</span>g/day</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-good" role="progressbar" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nutrition Density Score: <span id="nutritionScore">82</span>/100</label>
+                        <div class="progress">
+                            <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 82%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="report" class="container my-5 py-5" style="display: none;">
+        <div class="report-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Your Nutrition Report</h2>
+                <div>
+                    <button id="downloadReport" class="btn btn-primary me-2">
+                        <i class="fas fa-download me-2"></i>Download PDF
+                    </button>
+                    <button id="downloadImage" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-image me-2"></i>Download Image
+                    </button>
+                    <button id="shareResults" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shareModal">
+                        <i class="fas fa-share-alt me-2"></i>Share Results
+                    </button>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <h4><i class="fas fa-user me-2"></i>Personal Information</h4>
+                    <div id="reportPersonalInfo">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4><i class="fas fa-bullseye me-2"></i>Goals & Preferences</h4>
+                    <div id="reportGoals">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <h4><i class="fas fa-chart-pie me-2"></i>Nutritional Breakdown</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="reportMacroChart" height="250"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Key Nutrients (Recommended Daily Intake)</h5>
+                        <div id="keyNutrients">
+                            <div class="mb-3">
+                                <label class="form-label">Iron: <span class="fw-bold">12mg</span> (85% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-good" role="progressbar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Calcium: <span class="fw-bold">1000mg</span> (75% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Vitamin D: <span class="fw-bold">15mcg</span> (75% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Vitamin C: <span class="fw-bold">90mg</span> (100% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Potassium: <span class="fw-bold">3500mg</span> (75% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-good" role="progressbar" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Magnesium: <span class="fw-bold">400mg</span> (95% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Zinc: <span class="fw-bold">11mg</span> (100% RDA)</label>
+                                <div class="progress nutrient-progress">
+                                    <div class="progress-bar nutrient-excellent" role="progressbar" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <h4><i class="fas fa-utensils me-2"></i>Meal Plan Summary</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Meal</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                                <th>Sunday</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportMealPlan">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mb-5">
+                <h4><i class="fas fa-shopping-basket me-2"></i>Budget Analysis</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Estimated Weekly Cost</h5>
+                                <h2 id="weeklyCostDisplay" class="cost-within">$75.50</h2>
+                                <p class="text-muted">Within your budget of $100</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Cost Saving Tips</h5>
+                                <ul id="costSavingTips">
+                                    <li>Buy seasonal vegetables to save 15-20%</li>
+                                    <li>Purchase grains in bulk for long-term savings</li>
+                                    <li>Consider frozen fruits for smoothies</li>
+                                    <li>Plan meals around weekly grocery sales</li>
+                                    <li>Cook in batches to reduce energy costs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h4><i class="fas fa-lightbulb me-2"></i>Recommendations</h4>
+                <div id="recommendations">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Nutritional Adjustments</h5>
+                            <ul>
+                                <li>Increase fiber intake by adding more whole grains and legumes</li>
+                                <li>Consider omega-3 supplements or fatty fish twice a week for heart health</li>
+                                <li>Monitor iron levels with your current dietary preferences</li>
+                                <li>Include more vitamin C-rich foods to enhance iron absorption</li>
+                                <li>Ensure adequate calcium intake for bone health</li>
+                                <li>Rotate protein sources to ensure all essential amino acids</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Long-term Strategies</h5>
+                            <ul>
+                                <li>Meal prep on weekends to save time and money</li>
+                                <li>Track your progress with our mobile app for better accountability</li>
+                                <li>Schedule a follow-up assessment in 4 weeks to adjust your plan</li>
+                                <li>Include a variety of colorful vegetables for phytonutrients</li>
+                                <li>Stay hydrated with at least 8 glasses of water daily</li>
+                                <li>Combine strength training with your nutrition plan for optimal results</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="download-buttons mt-4">
+                <button id="downloadText" class="btn btn-outline-secondary download-btn">
+                    <i class="fas fa-file-alt me-2"></i>Download as Text
+                </button>
+                <button id="downloadExcel" class="btn btn-outline-success download-btn">
+                    <i class="fas fa-file-excel me-2"></i>Download as Excel
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Share Modal -->
+    <div class="modal fade share-modal" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">Share Your Nutrition Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="share-options">
+                        <div class="share-option" onclick="shareVia('email')">
+                            <div class="share-icon text-primary">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <span>Email</span>
+                        </div>
+                        <div class="share-option" onclick="shareVia('facebook')">
+                            <div class="share-icon text-primary">
+                                <i class="fab fa-facebook"></i>
+                            </div>
+                            <span>Facebook</span>
+                        </div>
+                        <div class="share-option" onclick="shareVia('twitter')">
+                            <div class="share-icon text-info">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <span>Twitter</span>
+                        </div>
+                        <div class="share-option" onclick="shareVia('whatsapp')">
+                            <div class="share-icon text-success">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <p class="mb-2">Or copy this link to share:</p>
+                        <div class="share-link-input">
+                            <input type="text" class="form-control" id="shareLink" value="https://smartplate.ai/report/12345" readonly>
+                            <button class="btn btn-primary" onclick="copyShareLink()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container py-4">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h5 class="mb-3">Positive Affirmations</h5>
+                    <p class="mb-2">🌿 Stay healthy and make life worthy.</p>
+                    <p class="mb-2">🌟 Health is the key to dream the opportunity you wanted to achieve.</p>
+                    <p class="mb-2">🛡️ Protect your health and support yourself.</p>
+                    <p class="mb-2">💖 Heal quickly to enjoy life peacefully.</p>
+                    <p class="mb-2">💰 Health is prosperity, which needs to be taken care of with maturity.</p>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 Smart Plate AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Toggle Button -->
+    <button id="chatbot-toggle">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <span>Nutrition Assistant</span>
+            <i class="fas fa-times" id="close-chatbot"></i>
+        </div>
+        <iframe 
+            src="https://cdn.botpress.cloud/webchat/v3.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/07/27/04/20250727042315-4SV6IQKT.json" 
+            width="100%" 
+            height="500px"
+            frameborder="0"
+            style="border-radius: 0 0 10px 10px;"
+        ></iframe>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Voice Accessibility Feature
+        class VoiceAccessibility {
+            constructor() {
+                this.isEnabled = false;
+                this.isListening = false;
+                this.currentFieldIndex = 0;
+                this.formFields = [];
+                this.recognition = null;
+                this.synthesis = null;
+                this.permissionGranted = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Get all form fields
+                this.formFields = Array.from(document.querySelectorAll('#nutritionForm input, #nutritionForm select, #nutritionForm textarea'));
+                
+                // Check if browser supports Web Speech API
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.showFeedback('Your browser does not support speech recognition. Please use Chrome, Edge, or Safari.', 'error');
+                    document.getElementById('voiceToggle').disabled = true;
+                    return;
+                }
+                
+                if (!('speechSynthesis' in window)) {
+                    this.showFeedback('Your browser does not support text-to-speech.', 'error');
+                    document.getElementById('voiceToggle').disabled = true;
+                    return;
+                }
+                
+                // Initialize speech recognition
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                this.recognition.continuous = false;
+                this.recognition.interimResults = false;
+                this.recognition.lang = 'en-US';
+                
+                // Initialize speech synthesis
+                this.synthesis = window.speechSynthesis;
+                
+                // Set up event handlers
+                this.setupEventHandlers();
+                
+                // Check if permission was previously granted
+                this.checkPermissionStatus();
+            }
+            
+            setupEventHandlers() {
+                // Voice toggle button
+                document.getElementById('voiceToggle').addEventListener('click', () => {
+                    this.toggleVoiceInteraction();
+                });
+                
+                // Form field focus events
+                this.formFields.forEach((field, index) => {
+                    field.addEventListener('focus', () => {
+                        this.currentFieldIndex = index;
+                        if (this.isEnabled) {
+                            this.speakQuestion(field);
+                            this.highlightField(field);
+                        }
+                    });
+                });
+                
+                // Speech recognition events
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateStatus('Listening...', 'listening');
+                };
+                
+                this.recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.trim().toLowerCase();
+                    console.log('Voice command received:', transcript);
+                    this.processVoiceCommand(transcript);
+                };
+                
+                this.recognition.onerror = (event) => {
+                    this.isListening = false;
+                    this.updateStatus('Error: ' + event.error, 'error');
+                    
+                    if (event.error === 'not-allowed') {
+                        this.showFeedback('Microphone access denied. Please allow microphone access to use voice features.', 'error');
+                        this.disableVoiceInteraction();
+                    }
+                };
+                
+                this.recognition.onend = () => {
+                    this.isListening = false;
+                    if (this.isEnabled) {
+                        this.updateStatus('Voice interaction enabled', 'active');
+                        // Restart listening if still enabled
+                        setTimeout(() => {
+                            if (this.isEnabled && !this.isListening) {
+                                this.startListening();
+                            }
+                        }, 500);
+                    } else {
+                        this.updateStatus('Voice interaction disabled', 'inactive');
+                    }
+                };
+            }
+            
+            checkPermissionStatus() {
+                // Check if permission was previously granted in this session
+                if (sessionStorage.getItem('voicePermissionGranted') === 'true') {
+                    this.permissionGranted = true;
+                    this.enableVoiceInteraction();
+                }
+            }
+            
+            async toggleVoiceInteraction() {
+                if (this.isEnabled) {
+                    this.disableVoiceInteraction();
+                } else {
+                    // Request microphone permission
+                    try {
+                        await navigator.mediaDevices.getUserMedia({ audio: true });
+                        this.permissionGranted = true;
+                        sessionStorage.setItem('voicePermissionGranted', 'true');
+                        this.enableVoiceInteraction();
+                    } catch (error) {
+                        this.showFeedback('Microphone access is required for voice interaction.', 'error');
+                        console.error('Microphone permission denied:', error);
+                    }
+                }
+            }
+            
+            enableVoiceInteraction() {
+                this.isEnabled = true;
+                document.getElementById('voiceToggleText').textContent = 'Disable Voice Interaction';
+                document.getElementById('voiceToggle').innerHTML = '<i class="fas fa-microphone-slash"></i> Disable Voice Interaction';
+                this.updateStatus('Voice interaction enabled', 'active');
+                
+                // Start with the first field
+                this.currentFieldIndex = 0;
+                this.focusField(this.currentFieldIndex);
+                
+                // Start listening for commands
+                this.startListening();
+                
+                this.showFeedback('Voice interaction enabled. You can now use voice commands to navigate and fill out the form.', 'success');
+            }
+            
+            disableVoiceInteraction() {
+                this.isEnabled = false;
+                this.isListening = false;
+                document.getElementById('voiceToggleText').textContent = 'Enable Voice Interaction';
+                document.getElementById('voiceToggle').innerHTML = '<i class="fas fa-microphone"></i> Enable Voice Interaction';
+                this.updateStatus('Voice interaction disabled', 'inactive');
+                
+                // Stop speech recognition
+                this.recognition.stop();
+                
+                // Remove active field highlighting
+                this.removeFieldHighlight();
+                
+                this.showFeedback('Voice interaction disabled.', 'success');
+            }
+            
+            startListening() {
+                if (this.isEnabled && !this.isListening) {
+                    try {
+                        this.recognition.start();
+                    } catch (error) {
+                        console.error('Speech recognition error:', error);
+                    }
+                }
+            }
+            
+            processVoiceCommand(transcript) {
+                console.log('Processing voice command:', transcript);
+                
+                // Process navigation commands
+                if (transcript.includes('next')) {
+                    this.nextField();
+                } else if (transcript.includes('previous') || transcript.includes('back')) {
+                    this.previousField();
+                } else if (transcript.includes('repeat')) {
+                    this.repeatQuestion();
+                } else if (transcript.includes('help')) {
+                    this.showHelp();
+                } else if (transcript.includes('submit')) {
+                    this.submitForm();
+                } else {
+                    // Assume the transcript is an answer to the current field
+                    this.fillField(transcript);
+                }
+            }
+            
+            nextField() {
+                if (this.currentFieldIndex < this.formFields.length - 1) {
+                    this.currentFieldIndex++;
+                    this.focusField(this.currentFieldIndex);
+                } else {
+                    this.speak("You're on the last field. Say 'submit' to submit the form.");
+                }
+            }
+            
+            previousField() {
+                if (this.currentFieldIndex > 0) {
+                    this.currentFieldIndex--;
+                    this.focusField(this.currentFieldIndex);
+                } else {
+                    this.speak("You're on the first field.");
+                }
+            }
+            
+            repeatQuestion() {
+                const currentField = this.formFields[this.currentFieldIndex];
+                this.speakQuestion(currentField);
+            }
+            
+            showHelp() {
+                const helpText = "Available commands: Next, Previous, Repeat, Help, Submit. To answer a question, just speak your answer.";
+                this.speak(helpText);
+                this.showFeedback(helpText, 'success');
+            }
+            
+            submitForm() {
+                this.speak("Submitting the form.");
+                document.getElementById('nutritionForm').dispatchEvent(new Event('submit'));
+            }
+            
+            focusField(index) {
+                const field = this.formFields[index];
+                field.focus();
+                this.speakQuestion(field);
+                this.highlightField(field);
+            }
+            
+            speakQuestion(field) {
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                let question = '';
+                
+                if (label) {
+                    question = label.textContent;
+                } else if (field.previousElementSibling && field.previousElementSibling.tagName === 'LABEL') {
+                    question = field.previousElementSibling.textContent;
+                } else {
+                    question = field.placeholder || `Field ${this.currentFieldIndex + 1}`;
+                }
+                
+                // Add field type context
+                if (field.type === 'select-one') {
+                    question += '. Please select an option.';
+                } else if (field.type === 'checkbox') {
+                    question += '. Please say yes or no.';
+                } else {
+                    question += '. Please provide your answer.';
+                }
+                
+                this.speak(question);
+            }
+            
+            fillField(transcript) {
+                const field = this.formFields[this.currentFieldIndex];
+                
+                // Process based on field type
+                if (field.type === 'select-one') {
+                    this.fillSelectField(field, transcript);
+                } else if (field.type === 'checkbox') {
+                    this.fillCheckboxField(field, transcript);
+                } else {
+                    // For text, number, etc.
+                    field.value = transcript;
+                    this.speak(`You entered: ${transcript}`);
+                    
+                    // Move to next field after a short delay
+                    setTimeout(() => {
+                        this.nextField();
+                    }, 1000);
+                }
+                
+                // Trigger change event for form validation
+                field.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            
+            fillSelectField(field, transcript) {
+                const options = Array.from(field.options);
+                const matchingOption = options.find(option => {
+                    if (!option.text) return false;
+                    const optionText = option.text.toLowerCase();
+                    return optionText.includes(transcript) || 
+                           transcript.includes(optionText) ||
+                           this.findBestMatch(optionText, transcript);
+                });
+                
+                if (matchingOption && matchingOption.value) {
+                    field.value = matchingOption.value;
+                    this.speak(`Selected: ${matchingOption.text}`);
+                    
+                    // Move to next field after a short delay
+                    setTimeout(() => {
+                        this.nextField();
+                    }, 1000);
+                } else {
+                    const optionTexts = options.filter(opt => opt.text && opt.value).map(opt => opt.text);
+                    this.speak(`I didn't understand. Please say one of: ${optionTexts.join(', ')}`);
+                }
+            }
+            
+            fillCheckboxField(field, transcript) {
+                if (transcript.includes('yes') || transcript.includes('true') || transcript.includes('on') || transcript.includes('check')) {
+                    field.checked = true;
+                    this.speak("Checked");
+                } else if (transcript.includes('no') || transcript.includes('false') || transcript.includes('off') || transcript.includes('uncheck')) {
+                    field.checked = false;
+                    this.speak("Unchecked");
+                } else {
+                    this.speak("Please say yes or no.");
+                    return;
+                }
+                
+                // Move to next field after a short delay
+                setTimeout(() => {
+                    this.nextField();
+                }, 1000);
+            }
+            
+            // Helper function to find best match between user input and options
+            findBestMatch(optionText, userInput) {
+                const optionWords = optionText.split(' ');
+                const userWords = userInput.split(' ');
+                
+                // Check if any word from user input matches any word from option
+                for (const userWord of userWords) {
+                    for (const optionWord of optionWords) {
+                        if (optionWord.includes(userWord) || userWord.includes(optionWord)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            speak(text) {
+                if (this.synthesis.speaking) {
+                    this.synthesis.cancel();
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                utterance.onstart = () => {
+                    this.updateStatus('Speaking...', 'speaking');
+                };
+                
+                utterance.onend = () => {
+                    if (this.isEnabled) {
+                        this.updateStatus('Voice interaction enabled', 'active');
+                    }
+                };
+                
+                this.synthesis.speak(utterance);
+            }
+            
+            highlightField(field) {
+                // Remove highlight from all fields
+                this.removeFieldHighlight();
+                
+                // Add highlight to current field
+                field.classList.add('active-field');
+            }
+            
+            removeFieldHighlight() {
+                this.formFields.forEach(field => {
+                    field.classList.remove('active-field');
+                });
+            }
+            
+            updateStatus(text, status) {
+                const statusElement = document.getElementById('voiceStatus');
+                const statusTextElement = document.getElementById('voiceStatusText');
+                const indicator = statusElement.querySelector('.voice-indicator');
+                
+                statusTextElement.textContent = text;
+                
+                // Remove all status classes
+                statusElement.classList.remove('active', 'inactive', 'error');
+                indicator.classList.remove('listening', 'speaking');
+                
+                // Add current status class
+                if (status === 'active') {
+                    statusElement.classList.add('active');
+                } else if (status === 'inactive') {
+                    statusElement.classList.add('inactive');
+                } else if (status === 'error') {
+                    statusElement.classList.add('error');
+                } else if (status === 'listening') {
+                    indicator.classList.add('listening');
+                } else if (status === 'speaking') {
+                    indicator.classList.add('speaking');
+                }
+            }
+            
+            showFeedback(text, type) {
+                const feedbackElement = document.getElementById('voiceFeedback');
+                const feedbackTextElement = document.getElementById('voiceFeedbackText');
+                
+                feedbackTextElement.textContent = text;
+                
+                // Remove all type classes
+                feedbackElement.classList.remove('active', 'error', 'success');
+                
+                // Add current type class and show
+                feedbackElement.classList.add('active', type);
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    feedbackElement.classList.remove('active');
+                }, 5000);
+            }
+        }
+
+        // Initialize voice accessibility when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.voiceAccessibility = new VoiceAccessibility();
+        });
+
+        // Macronutrients Animation Functions
+        function animateMacroCard(card) {
+            card.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 300);
+        }
+        
+        function checkMacroAnswer(option, isCorrect) {
+            const feedback = document.getElementById('macro-feedback');
+            const options = document.querySelectorAll('#macro-quiz .quiz-option');
+            
+            options.forEach(opt => {
+                opt.onclick = null; // Disable further clicks
+            });
+            
+            if (isCorrect) {
+                option.classList.add('correct');
+                feedback.style.display = 'block';
+                feedback.style.background = '#c8e6c9';
+            } else {
+                option.classList.add('incorrect');
+                feedback.style.display = 'block';
+                feedback.style.background = '#ffcdd2';
+                feedback.innerHTML = '<strong>Oops!</strong> Fats actually provide 9 calories per gram—the most energy-dense macro.';
+            }
+        }
+
+        function createRaindrops() {
+            const container = document.getElementById('raindrops-container');
+            const windowWidth = window.innerWidth;
+            const dropsCount = Math.floor(windowWidth / 20);
+            
+            for (let i = 0; i < dropsCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('raindrop');
+                
+                const left = Math.random() * windowWidth;
+                const animationDuration = 1 + Math.random() * 2;
+                const animationDelay = Math.random() * 5;
+                const opacity = 0.2 + Math.random() * 0.3;
+                const height = 5 + Math.random() * 15;
+                
+                drop.style.left = `${left}px`;
+                drop.style.animationDuration = `${animationDuration}s`;
+                drop.style.animationDelay = `${animationDelay}s`;
+                drop.style.opacity = opacity;
+                drop.style.height = `${height}px`;
+                
+                container.appendChild(drop);
+            }
+        }
+        
+        document.getElementById('budget').addEventListener('input', function() {
+            document.getElementById('budgetValue').textContent = `$${this.value}`;
+        });
+        
+        const sampleMeals = {
+            breakfast: [
+                { name: "Oatmeal with Berries", calories: 300, protein: 8, carbs: 50, fats: 5, cost: 1.50, img: "https://images.unsplash.com/photo-1608500218807-3702591a21e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Greek Yogurt Parfait", calories: 250, protein: 15, carbs: 30, fats: 8, cost: 2.00, img: "https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Avocado Toast", calories: 350, protein: 10, carbs: 35, fats: 20, cost: 2.50, img: "https://images.unsplash.com/photo-1546069901-4567a149c8a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", contains: ["avocado"] }
+            ],
+            lunch: [
+                { name: "Quinoa Salad", calories: 400, protein: 12, carbs: 45, fats: 15, cost: 3.50, img: "https://images.unsplash.com/photo-1546069901-4567a149c8a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Chicken Wrap", calories: 450, protein: 25, carbs: 35, fats: 20, cost: 4.00, img: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Lentil Soup", calories: 350, protein: 18, carbs: 40, fats: 10, cost: 2.75, img: "https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" }
+            ],
+            dinner: [
+                { name: "Salmon with Veggies", calories: 500, protein: 30, carbs: 25, fats: 25, cost: 5.50, img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Vegetable Stir Fry", calories: 400, protein: 15, carbs: 50, fats: 15, cost: 3.75, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Turkey Meatballs", calories: 450, protein: 28, carbs: 30, fats: 22, cost: 4.25, img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" }
+            ],
+            snacks: [
+                { name: "Mixed Nuts", calories: 200, protein: 6, carbs: 8, fats: 16, cost: 1.00, img: "https://images.unsplash.com/photo-1608248544923-7680a3a6a065?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Fruit Salad", calories: 150, protein: 2, carbs: 35, fats: 1, cost: 1.25, img: "https://images.unsplash.com/photo-1568700949450-36c8b5f49293?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" },
+                { name: "Protein Shake", calories: 180, protein: 20, carbs: 15, fats: 5, cost: 1.75, img: "https://images.unsplash.com/photo-1597074866543-efe7f17c5a1e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" }
+            ]
+        };
+        
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        document.getElementById('nutritionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Encrypt sensitive data before processing
+            const age = encryptData(document.getElementById('age').value);
+            const gender = encryptData(document.getElementById('gender').value);
+            const height = encryptData(document.getElementById('height').value);
+            const weight = encryptData(document.getElementById('weight').value);
+            const activity = encryptData(document.getElementById('activity').value);
+            const goal = encryptData(document.getElementById('goal').value);
+            const budget = encryptData(document.getElementById('budget').value);
+            const vegetarian = document.getElementById('vegetarian').checked;
+            const vegan = document.getElementById('vegan').checked;
+            const glutenFree = document.getElementById('glutenFree').checked;
+            const dairyFree = document.getElementById('dairyFree').checked;
+            const allergies = encryptData(document.getElementById('allergies').value.toLowerCase());
+            
+            // Store encrypted data in session storage (simulated)
+            sessionStorage.setItem('userData', JSON.stringify({
+                age, gender, height, weight, activity, goal, budget,
+                preferences: { vegetarian, vegan, glutenFree, dairyFree },
+                allergies
+            }));
+            
+            document.getElementById('profileSummary').innerHTML = `
+                <p><strong>Age:</strong> ${decryptData(age)}</p>
+                <p><strong>Gender:</strong> ${decryptData(gender).charAt(0).toUpperCase() + decryptData(gender).slice(1)}</p>
+                <p><strong>Height:</strong> ${decryptData(height)} cm</p>
+                <p><strong>Weight:</strong> ${decryptData(weight)} kg</p>
+                <p><strong>BMI:</strong> ${(decryptData(weight) / ((decryptData(height)/100) * (decryptData(height)/100))).toFixed(1)}</p>
+            `;
+            
+            let goalText = '';
+            const weightValue = parseFloat(decryptData(weight));
+            switch(decryptData(goal)) {
+                case 'weight_loss':
+                    goalText = 'Caloric deficit for gradual weight loss';
+                    document.getElementById('caloriesValue').textContent = Math.round(weightValue * 30 * 0.8);
+                    break;
+                case 'weight_gain':
+                    goalText = 'Caloric surplus for healthy weight gain';
+                    document.getElementById('caloriesValue').textContent = Math.round(weightValue * 30 * 1.2);
+                    break;
+                case 'muscle_gain':
+                    goalText = 'High protein intake for muscle growth';
+                    document.getElementById('caloriesValue').textContent = Math.round(weightValue * 30 * 1.1);
+                    document.getElementById('proteinValue').textContent = Math.round(weightValue * 2.2);
+                    break;
+                case 'health_improvement':
+                    goalText = 'Balanced nutrition for overall health';
+                    document.getElementById('caloriesValue').textContent = Math.round(weightValue * 30);
+                    break;
+                default:
+                    goalText = 'Maintaining current weight';
+                    document.getElementById('caloriesValue').textContent = Math.round(weightValue * 30);
+            }
+            
+            document.getElementById('nutritionGoals').innerHTML = `
+                <p><strong>Primary Goal:</strong> ${goalText}</p>
+                <p><strong>Activity Level:</strong> ${document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text}</p>
+                <p><strong>Weekly Budget:</strong> $${decryptData(budget)}</p>
+                <p><strong>Dietary Preferences:</strong> ${vegetarian ? 'Vegetarian ' : ''}${vegan ? 'Vegan ' : ''}${glutenFree ? 'Gluten-Free ' : ''}${dairyFree ? 'Dairy-Free ' : ''}${!vegetarian && !vegan && !glutenFree && !dairyFree ? 'None' : ''}</p>
+                ${decryptData(allergies) ? `<p><strong>Allergies:</strong> ${decryptData(allergies)}</p>` : ''}
+            `;
+            
+            document.getElementById('fiberValue').textContent = Math.round(weightValue * 0.4);
+            document.getElementById('nutritionScore').textContent = calculateNutritionScore();
+            
+            // Update micronutrient values based on recommendations
+            document.getElementById('vitaminDValue').textContent = calculateVitaminD(decryptData(age), decryptData(gender), weightValue);
+            document.getElementById('ironValue').textContent = calculateIron(decryptData(gender), vegetarian);
+            document.getElementById('calciumValue').textContent = calculateCalcium(decryptData(age), decryptData(gender));
+            document.getElementById('vitaminCValue').textContent = calculateVitaminC(decryptData(activity));
+            document.getElementById('potassiumValue').textContent = calculatePotassium(weightValue, decryptData(activity));
+            document.getElementById('magnesiumValue').textContent = calculateMagnesium(decryptData(activity));
+            document.getElementById('zincValue').textContent = calculateZinc(decryptData(gender));
+            
+            const mealPlanTable = document.getElementById('mealPlanTable');
+            mealPlanTable.innerHTML = '';
+            
+            let totalWeeklyCost = 0;
+            
+            days.forEach(day => {
+                const row = document.createElement('tr');
+                
+                const dayCell = document.createElement('td');
+                dayCell.textContent = day;
+                row.appendChild(dayCell);
+                
+                ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(mealType => {
+                    let meals = sampleMeals[mealType];
+                    
+                    // Filter meals based on dietary preferences
+                    if (vegetarian || vegan) {
+                        meals = meals.filter(meal => !meal.name.includes('Chicken') && !meal.name.includes('Turkey') && !meal.name.includes('Salmon') && !meal.name.includes('Meatballs'));
+                    }
+                    if (vegan) {
+                        meals = meals.filter(meal => !meal.name.includes('Yogurt') && !meal.name.includes('Protein Shake') && !meal.name.includes('Eggs'));
+                    }
+                    
+                    // Filter out meals that contain allergens
+                    if (decryptData(allergies)) {
+                        const allergyList = decryptData(allergies).split(',').map(a => a.trim());
+                        meals = meals.filter(meal => {
+                            // Skip if meal doesn't have a 'contains' property
+                            if (!meal.contains) return true;
+                            
+                            // Check if meal contains any allergens
+                            return !meal.contains.some(ingredient => 
+                                allergyList.includes(ingredient.toLowerCase())
+                            );
+                        });
+                    }
+                    
+                    const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+                    totalWeeklyCost += randomMeal ? randomMeal.cost : 0;
+                    
+                    const cell = document.createElement('td');
+                    if (randomMeal) {
+                        cell.innerHTML = `
+                            <div class="meal-card">
+                                <img src="${randomMeal.img}" alt="${randomMeal.name}" class="img-fluid meal-img">
+                                <div class="p-3">
+                                    <h6>${randomMeal.name}</h6>
+                                    <small class="text-muted">${randomMeal.calories} cal | $${randomMeal.cost.toFixed(2)}</small>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        cell.innerHTML = '<div class="text-muted">No suitable meal found</div>';
+                    }
+                    row.appendChild(cell);
+                });
+                
+                mealPlanTable.appendChild(row);
+            });
+            
+            // Update the weekly cost display with color coding
+            const weeklyCostElement = document.getElementById('weeklyCostDisplay');
+            const weeklyCost = Math.round(totalWeeklyCost * 100) / 100;
+            weeklyCostElement.textContent = `$${weeklyCost.toFixed(2)}`;
+            
+            if (weeklyCost > decryptData(budget)) {
+                weeklyCostElement.classList.remove('cost-within');
+                weeklyCostElement.classList.add('cost-over');
+                document.querySelector('#weeklyCostDisplay + p').textContent = `Over your budget of $${decryptData(budget)}`;
+            } else {
+                weeklyCostElement.classList.remove('cost-over');
+                weeklyCostElement.classList.add('cost-within');
+                document.querySelector('#weeklyCostDisplay + p').textContent = `Within your budget of $${decryptData(budget)}`;
+            }
+            
+            const groceryList = document.getElementById('groceryList');
+            groceryList.innerHTML = '';
+            
+            // Base groceries that everyone gets
+            let groceries = [
+                { name: "Oats", category: "Grains", amount: "500g", vegetarian: true, vegan: true, glutenFree: false },
+                { name: "Mixed Berries", category: "Fruits", amount: "300g", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Quinoa", category: "Grains", amount: "400g", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Mixed Vegetables", category: "Vegetables", amount: "1kg", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Almonds", category: "Nuts", amount: "200g", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Oranges", category: "Fruits", amount: "1kg", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Spinach", category: "Vegetables", amount: "500g", vegetarian: true, vegan: true, glutenFree: true },
+                { name: "Sweet Potatoes", category: "Vegetables", amount: "1kg", vegetarian: true, vegan: true, glutenFree: true }
+            ];
+            
+            // Add meat/fish if not vegetarian/vegan
+            if (!vegetarian && !vegan) {
+                groceries.push(
+                    { name: "Chicken Breast", category: "Meat", amount: "1kg", vegetarian: false, vegan: false, glutenFree: true },
+                    { name: "Salmon Fillet", category: "Fish", amount: "600g", vegetarian: false, vegan: false, glutenFree: true },
+                    { name: "Eggs", category: "Dairy", amount: "12", vegetarian: true, vegan: false, glutenFree: true }
+                );
+            }
+            
+            // Add dairy if not vegan
+            if (!vegan && !dairyFree) {
+                groceries.push(
+                    { name: "Greek Yogurt", category: "Dairy", amount: "1kg", vegetarian: true, vegan: false, glutenFree: true },
+                    { name: "Cheese", category: "Dairy", amount: "200g", vegetarian: true, vegan: false, glutenFree: true }
+                );
+            }
+            
+            // Add gluten-free alternatives if needed
+            if (glutenFree) {
+                groceries = groceries.filter(item => item.glutenFree || item.category !== 'Grains');
+                groceries.push(
+                    { name: "Gluten-Free Bread", category: "Grains", amount: "1 loaf", vegetarian: true, vegan: vegan, glutenFree: true }
+                );
+            }
+            
+            // Filter based on allergies if specified
+            if (decryptData(allergies)) {
+                const allergyList = decryptData(allergies).split(',').map(a => a.trim());
+                groceries = groceries.filter(item => {
+                    const itemName = item.name.toLowerCase();
+                    return !allergyList.some(allergy => itemName.includes(allergy.toLowerCase()));
+                });
+            }
+            
+            groceries.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">${item.name}</h6>
+                            <p class="card-text text-muted small">${item.category} · ${item.amount}</p>
+                        </div>
+                    </div>
+                `;
+                groceryList.appendChild(col);
+            });
+            
+            createMacroChart();
+            createReportMacroChart();
+            
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('report').style.display = 'block';
+            
+            document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+            
+            updateReportSections(decryptData(age), decryptData(gender), decryptData(height), decryptData(weight), 
+                               decryptData(activity), decryptData(goal), decryptData(budget), 
+                               vegetarian, vegan, glutenFree, dairyFree, decryptData(allergies));
+        });
+        
+        // Simple encryption/decryption for demo purposes
+        function encryptData(data) {
+            // In a real application, use proper encryption like AES
+            return btoa(encodeURIComponent(data));
+        }
+        
+        function decryptData(encrypted) {
+            try {
+                return decodeURIComponent(atob(encrypted));
+            } catch (e) {
+                return encrypted; // Return as-is if not encrypted
+            }
+        }
+        
+        function calculateNutritionScore() {
+            const age = document.getElementById('age').value;
+            const weight = document.getElementById('weight').value;
+            const activity = document.getElementById('activity').value;
+            
+            let score = 70;
+            
+            if (activity === 'active' || activity === 'extreme') score += 10;
+            if (age < 30) score += 5;
+            if (document.getElementById('vegetarian').checked) score += 8;
+            
+            return Math.min(100, score);
+        }
+        
+        function calculateVitaminD(age, gender, weight) {
+            let base = 15; // mcg
+            if (age > 50) base += 5;
+            if (gender === 'female') base += 2;
+            return Math.round(base * (weight / 70));
+        }
+        
+        function calculateIron(gender, vegetarian) {
+            // RDA for iron is higher for women and vegetarians
+            let base = gender === 'female' ? 18 : 8;
+            if (vegetarian) base = Math.round(base * 1.8);
+            return base;
+        }
+        
+        function calculateCalcium(age, gender) {
+            // RDA for calcium varies by age and gender
+            if (age > 50 && gender === 'female') return 1200;
+            if (age > 70) return 1200;
+            return 1000;
+        }
+        
+        function calculateVitaminC(activity) {
+            // More active people need more vitamin C
+            let base = 90; // mg
+            if (activity === 'active' || activity === 'extreme') base += 30;
+            return base;
+        }
+        
+        function calculatePotassium(weight, activity) {
+            // Base RDA is 3500mg, adjust based on weight and activity
+            let base = 3500;
+            base = Math.round(base * (weight / 70));
+            if (activity === 'active' || activity === 'extreme') base += 500;
+            return base;
+        }
+        
+        function calculateMagnesium(activity) {
+            // Base RDA is 400mg, adjust based on activity
+            let base = 400;
+            if (activity === 'active' || activity === 'extreme') base += 50;
+            return base;
+        }
+        
+        function calculateZinc(gender) {
+            // RDA for zinc varies by gender
+            return gender === 'female' ? 8 : 11;
+        }
+        
+        function createMacroChart() {
+            const ctx = document.getElementById('macroChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Protein', 'Carbohydrates', 'Fats'],
+                    datasets: [{
+                        data: [30, 40, 30],
+                        backgroundColor: [
+                            '#4a6fa5',
+                            '#6b8cae',
+                            '#ff7e5f'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createReportMacroChart() {
+            const ctx = document.getElementById('reportMacroChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Protein', 'Carbs', 'Fats', 'Fiber', 'Sugar'],
+                    datasets: [{
+                        label: 'Daily Intake (g)',
+                        data: [120, 250, 65, 25, 30],
+                        backgroundColor: [
+                            '#4a6fa5',
+                            '#6b8cae',
+                            '#ff7e5f',
+                            '#6bbaa7',
+                            '#f6c667'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateReportSections(age, gender, height, weight, activity, goal, budget, vegetarian, vegan, glutenFree, dairyFree, allergies) {
+            document.getElementById('reportPersonalInfo').innerHTML = `
+                <p><strong>Age:</strong> ${age}</p>
+                <p><strong>Gender:</strong> ${gender.charAt(0).toUpperCase() + gender.slice(1)}</p>
+                <p><strong>Height:</strong> ${height} cm</p>
+                <p><strong>Weight:</strong> ${weight} kg</p>
+                <p><strong>BMI:</strong> ${(weight / ((height/100) * (height/100))).toFixed(1)}</p>
+            `;
+            
+            let goalDetails = '';
+            switch(goal) {
+                case 'weight_loss':
+                    goalDetails = 'Caloric deficit of 15-20% for gradual weight loss (0.5-1kg per week)';
+                    break;
+                case 'weight_gain':
+                    goalDetails = 'Caloric surplus of 10-15% for healthy weight gain (0.25-0.5kg per week)';
+                    break;
+                case 'muscle_gain':
+                    goalDetails = 'High protein intake (1.6-2.2g per kg body weight) with resistance training';
+                    break;
+                case 'health_improvement':
+                    goalDetails = 'Balanced macronutrients with emphasis on micronutrient diversity';
+                    break;
+                default:
+                    goalDetails = 'Maintenance of current weight with balanced nutrition';
+            }
+            
+            document.getElementById('reportGoals').innerHTML = `
+                <p><strong>Primary Goal:</strong> ${goalDetails}</p>
+                <p><strong>Activity Level:</strong> ${document.getElementById('activity').options[document.getElementById('activity').selectedIndex].text}</p>
+                <p><strong>Weekly Budget:</strong> $${budget}</p>
+                <p><strong>Dietary Preferences:</strong> ${vegetarian ? 'Vegetarian ' : ''}${vegan ? 'Vegan ' : ''}${glutenFree ? 'Gluten-Free ' : ''}${dairyFree ? 'Dairy-Free ' : ''}${!vegetarian && !vegan && !glutenFree && !dairyFree ? 'None' : ''}</p>
+                ${allergies ? `<p><strong>Allergies:</strong> ${allergies}</p>` : ''}
+            `;
+            
+            const reportMealPlan = document.getElementById('reportMealPlan');
+            reportMealPlan.innerHTML = '';
+            
+            const mealTimes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+            
+            mealTimes.forEach(meal => {
+                const row = document.createElement('tr');
+                
+                const mealCell = document.createElement('td');
+                mealCell.textContent = meal;
+                row.appendChild(mealCell);
+                
+                days.forEach(day => {
+                    let meals = sampleMeals[meal.toLowerCase()];
+                    
+                    // Filter meals based on dietary preferences
+                    if (vegetarian || vegan) {
+                        meals = meals.filter(m => !m.name.includes('Chicken') && !m.name.includes('Turkey') && !m.name.includes('Salmon'));
+                    }
+                    if (vegan) {
+                        meals = meals.filter(m => !m.name.includes('Yogurt') && !m.name.includes('Protein Shake'));
+                    }
+                    
+                    // Filter out meals that contain allergens
+                    if (allergies) {
+                        const allergyList = allergies.split(',').map(a => a.trim());
+                        meals = meals.filter(meal => {
+                            // Skip if meal doesn't have a 'contains' property
+                            if (!meal.contains) return true;
+                            
+                            // Check if meal contains any allergens
+                            return !meal.contains.some(ingredient => 
+                                allergyList.includes(ingredient.toLowerCase())
+                            );
+                        });
+                    }
+                    
+                    const randomMeal = meals[Math.floor(Math.random() * meals.length)];
+                    
+                    const cell = document.createElement('td');
+                    if (randomMeal) {
+                        cell.innerHTML = `<small>${randomMeal.name}<br>${randomMeal.calories} cal</small>`;
+                    } else {
+                        cell.innerHTML = '<small class="text-muted">No suitable meal found</small>';
+                    }
+                    row.appendChild(cell);
+                });
+                
+                reportMealPlan.appendChild(row);
+            });
+        }
+        
+        document.getElementById('downloadReport').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.text('AI-Powered Smart Plate Nutrition Report', 105, 20, { align: 'center' });
+            
+            // Add date
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
+            
+            // Add personal information
+            doc.setFontSize(14);
+            doc.text('Personal Information', 20, 50);
+            doc.setFontSize(12);
+            
+            const personalInfo = document.getElementById('reportPersonalInfo').textContent;
+            const personalLines = doc.splitTextToSize(personalInfo, 180);
+            doc.text(personalLines, 20, 60);
+            
+            // Add goals
+            doc.setFontSize(14);
+            doc.text('Goals & Preferences', 20, 90);
+            doc.setFontSize(12);
+            
+            const goalsInfo = document.getElementById('reportGoals').textContent;
+            const goalsLines = doc.splitTextToSize(goalsInfo, 180);
+            doc.text(goalsLines, 20, 100);
+            
+            // Add nutritional breakdown
+            doc.setFontSize(14);
+            doc.text('Nutritional Breakdown', 20, 130);
+            doc.setFontSize(12);
+            
+            const nutrientsInfo = document.getElementById('keyNutrients').textContent;
+            const nutrientsLines = doc.splitTextToSize(nutrientsInfo, 180);
+            doc.text(nutrientsLines, 20, 140);
+            
+            // Add meal plan summary
+            doc.setFontSize(14);
+            doc.text('Meal Plan Summary', 20, 180);
+            doc.setFontSize(12);
+            
+            const mealPlanInfo = document.getElementById('reportMealPlan').textContent;
+            const mealPlanLines = doc.splitTextToSize(mealPlanInfo, 180);
+            doc.text(mealPlanLines, 20, 190);
+            
+            // Add budget analysis
+            doc.setFontSize(14);
+            doc.text('Budget Analysis', 20, 230);
+            doc.setFontSize(12);
+            
+            const budgetInfo = document.querySelector('#weeklyCostDisplay').textContent + ' ' + 
+                              document.querySelector('#weeklyCostDisplay + p').textContent;
+            doc.text(budgetInfo, 20, 240);
+            
+            // Add recommendations
+            doc.setFontSize(14);
+            doc.text('Recommendations', 20, 260);
+            doc.setFontSize(12);
+            
+            const recommendationsInfo = document.getElementById('recommendations').textContent;
+            const recommendationsLines = doc.splitTextToSize(recommendationsInfo, 180);
+            doc.text(recommendationsLines, 20, 270);
+            
+            // Save the PDF
+            doc.save('SmartPlate-Report.pdf');
+        });
+        
+        document.getElementById('downloadImage').addEventListener('click', function() {
+            const reportSection = document.querySelector('.report-section');
+            
+            html2canvas(reportSection).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'nutrition-report.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+        
+        document.getElementById('downloadText').addEventListener('click', function() {
+            const reportText = generateReportText();
+            const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+            saveAs(blob, 'nutrition-report.txt');
+        });
+        
+        document.getElementById('downloadExcel').addEventListener('click', function() {
+            const wb = XLSX.utils.book_new();
+            
+            // Create a worksheet with report data
+            const reportData = [
+                ['AI-Powered Smart Plate Nutrition Report'],
+                [`Generated on: ${new Date().toLocaleDateString()}`],
+                [''],
+                ['Personal Information'],
+                ...document.getElementById('reportPersonalInfo').textContent.split('\n').filter(line => line.trim()).map(line => [line.trim()]),
+                [''],
+                ['Goals & Preferences'],
+                ...document.getElementById('reportGoals').textContent.split('\n').filter(line => line.trim()).map(line => [line.trim()]),
+                [''],
+                ['Nutritional Breakdown'],
+                ...document.getElementById('keyNutrients').textContent.split('\n').filter(line => line.trim()).map(line => [line.trim()]),
+                [''],
+                ['Meal Plan Summary'],
+                ...document.getElementById('reportMealPlan').textContent.split('\n').filter(line => line.trim()).map(line => [line.trim()]),
+                [''],
+                ['Budget Analysis'],
+                [document.querySelector('#weeklyCostDisplay').textContent + ' ' + document.querySelector('#weeklyCostDisplay + p').textContent],
+                [''],
+                ['Recommendations'],
+                ...document.getElementById('recommendations').textContent.split('\n').filter(line => line.trim()).map(line => [line.trim()])
+            ];
+            
+            const ws = XLSX.utils.aoa_to_sheet(reportData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Nutrition Report');
+            XLSX.writeFile(wb, 'nutrition-report.xlsx');
+        });
+        
+        function generateReportText() {
+            let reportText = 'AI-Powered Smart Plate Nutrition Report\n';
+            reportText += `Generated on: ${new Date().toLocaleDateString()}\n\n`;
+            
+            reportText += 'Personal Information\n';
+            reportText += document.getElementById('reportPersonalInfo').textContent + '\n\n';
+            
+            reportText += 'Goals & Preferences\n';
+            reportText += document.getElementById('reportGoals').textContent + '\n\n';
+            
+            reportText += 'Nutritional Breakdown\n';
+            reportText += document.getElementById('keyNutrients').textContent + '\n\n';
+            
+            reportText += 'Meal Plan Summary\n';
+            reportText += document.getElementById('reportMealPlan').textContent + '\n\n';
+            
+            reportText += 'Budget Analysis\n';
+            reportText += document.querySelector('#weeklyCostDisplay').textContent + ' ' + 
+                          document.querySelector('#weeklyCostDisplay + p').textContent + '\n\n';
+            
+            reportText += 'Recommendations\n';
+            reportText += document.getElementById('recommendations').textContent + '\n';
+            
+            return reportText;
+        }
+        
+        function shareVia(platform) {
+            let shareUrl = '';
+            const reportUrl = window.location.href.split('#')[0] + '#report';
+            const reportTitle = 'My Nutrition Report from Smart Plate AI';
+            const reportText = 'Check out my personalized nutrition report from Smart Plate AI!';
+            
+            switch(platform) {
+                case 'email':
+                    shareUrl = `mailto:?subject=${encodeURIComponent(reportTitle)}&body=${encodeURIComponent(reportText + '\n' + reportUrl)}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(reportUrl)}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(reportText)}&url=${encodeURIComponent(reportUrl)}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${encodeURIComponent(reportText + ' ' + reportUrl)}`;
+                    break;
+            }
+            
+            window.open(shareUrl, '_blank');
+        }
+        
+        function copyShareLink() {
+            const shareLink = document.getElementById('shareLink');
+            shareLink.select();
+            document.execCommand('copy');
+            
+            // Show tooltip or alert
+            alert('Link copied to clipboard!');
+        }
+        
+        // Chatbot toggle functionality
+        document.getElementById('chatbot-toggle').addEventListener('click', function() {
+            const chatbot = document.getElementById('chatbot-container');
+            if (chatbot.style.display === 'none' || chatbot.style.display === '') {
+                chatbot.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                chatbot.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-robot"></i>';
+            }
+        });
+        
+        document.getElementById('close-chatbot').addEventListener('click', function() {
+            document.getElementById('chatbot-container').style.display = 'none';
+            document.getElementById('chatbot-toggle').innerHTML = '<i class="fas fa-robot"></i>';
+        });
+        
+        window.addEventListener('load', function() {
+            createRaindrops();
+        });
+        
+        window.addEventListener('resize', function() {
+            document.getElementById('raindrops-container').innerHTML = '';
+            createRaindrops();
+        });
+    </script>
+</body>
+</html>
