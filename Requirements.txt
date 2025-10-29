@@ -9,3 +9,5 @@ reportlab==4.0.4
 Pillow==10.0.0
 python-dotenv==1.0.0
 gunicorn==21.2.0
+setuptools==65.5.0  
+wheel==0.40.0       
